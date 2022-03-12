@@ -57,15 +57,28 @@ def get_friends(ids: list, labels: list, edges: dict) -> dict:
         friends = tweepy.API.get_friends(user_id=id)  # Returns list of class User
         for friend in friends:
             edges['source'].append(id)
-            edges['target_label'].append(label)
+            edges['source_label'].append(label)
             edges['target'].append(friend.id)
             edges['target_label'].append(friend.screen_name)
 
         return edges
 
-def node_edge_transform():
-    """Transforms dictionary of friend network into Gephi node + edge sheets"""
-    
+def node_edge_transform(edges: dict, path='export',filenameEdges=R'export\edges.csv',
+                        filenameNodes=R'export\nodes.csv'):
+    """Transforms dictionary of friend network into Gephi node + edge sheets
+    Exports these sheets as csv file to default 'export' folder, unless specified"""
+    with open(filenameEdges, 'w') as csvfile:
+        csvwriter = csv.writer(csvfile)
+        # Write header row, then each row by iterating thru dict
+        csvwriter.writerow(edges.keys())
+        csvwriter.writerows(zip(*edges.values()))
+
+    with open(filenameNodes, 'w') as csvfile:
+        csvwriter = csv.writer(csvfile)
+        csvwriter.writerow(['id', 'label'])
+        csvwriter.writerows(zip(edges['source'], edges['source_label']))
+
+
 
 
 
