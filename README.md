@@ -13,4 +13,4 @@ be imported into Gephi or NodeXL for further analysis.
 
 ## An example visualization from a few test users
 
-![Example graph made in Gephi](network_vis_test2.png "Gephi Visualization)
+![Example graph made in Gephi](network_vis_test2.png "Gephi Visualization")
