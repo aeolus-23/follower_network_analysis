@@ -19,6 +19,8 @@ users = {
     'user_screen_name': [],
 }
 
+def createUserList(filename, users):
+    """Creates list of users of interest from csv file"""
 with open(filename, newline='', encoding='utf-8') as csvfile:
     data = csv.reader(csvfile)
     for row in data:
@@ -50,11 +52,11 @@ edges = {
     'target_label': []
 }  
 
-def get_friends(ids: list, labels: list, edges: dict) -> dict:
+def get_friends(client: tweepy.Client, ids: list, labels: list, edges: dict) -> dict:
     """Returns list of followers for each user id"""
     for id, label in zip(ids, labels):
         print(f'Retrieving data for {label}.')
-        friends = tweepy.API.get_friends(user_id=id)  # Returns list of class User
+        friends = client.get_friends(user_id=id)  # Returns list of class User
         for friend in friends:
             edges['source'].append(id)
             edges['source_label'].append(label)
@@ -63,7 +65,7 @@ def get_friends(ids: list, labels: list, edges: dict) -> dict:
 
         return edges
 
-def node_edge_transform(edges: dict, path='export',filenameEdges=R'export\edges.csv',
+def node_edge_transform(edges: dict, filenameEdges=R'export\edges.csv',
                         filenameNodes=R'export\nodes.csv'):
     """Transforms dictionary of friend network into Gephi node + edge sheets
     Exports these sheets as csv file to default 'export' folder, unless specified"""
