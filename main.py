@@ -22,21 +22,25 @@ if __name__ == '__main__':
 
     # Get only unique names from userData
     uniqueData = process.uniqueUsers(zip(*userData.values()))
-    print(uniqueData[:10])
-    # _something = process.uniqueUsers(zip(*userData.values()))
-    # ids, labels = process.uniqueUsers(userData)
-    # print(len(ids))
-    # print(len(labels))
-    
-
-
 
     # Connect to Twitter API and retrieve friend network
 
-    # try:
-    #     client = tweepy.Client(bearer_token=settings.bearer_token, 
-    #                             wait_on_rate_limit=True)
-    # except tweepy.Unauthorized:
-    #     print('Error 401. Could not authorize.')
+    try:
+        client = tweepy.Client(bearer_token=settings.bearer_token, 
+                                wait_on_rate_limit=True)
+    except tweepy.Unauthorized:
+        print('Error 401. Could not authorize.')
+
+    _edges = {
+        'source': [],
+        'source_label': [],
+        'target': [],
+        'target_label': []
+    }
+
+    edges = process.get_friends(client, uniqueData, _edges)
+    print(edges)
+
+    
 
     # TODO: Write information to csv (edges and nodes)

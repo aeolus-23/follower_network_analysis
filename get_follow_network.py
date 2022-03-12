@@ -2,15 +2,8 @@
 
 import csv
 import tweepy
-import constants
 
-# Not used right now, factorize later
-# def load_data(filename: str) -> csv.reader:
-#     """Loads csv data from Hydrated Tweet set"""
-#     with open(filename, newline='') as csvfile:
-#         data = csv.reader(csvfile)
-#         return data
-
+# Get relevant user data 
 def createUserList(filename: str, users: dict):
     """Creates list of users of interest from csv file"""
     with open(filename, newline='', encoding='utf-8') as csvfile:
@@ -21,24 +14,27 @@ def createUserList(filename: str, users: dict):
 
         return users
     
-# Create new lists for user ids and lables (names) from csv dataset
-
 def uniqueUsers(usersData: zip) -> list:
-    """Removes duplicate user ids, returns list of tuples (user_id, label"""
+    """Removes duplicate user ids, returns list of tuples (user_id, label)"""
     return list(set([i for i in usersData]))
 
-def get_friends(client: tweepy.Client, ids: list, labels: list, edges: dict) -> dict:
+# Get follower networks 
+
+def get_friends(client: tweepy.Client, userData: list, edges: dict) -> dict:
     """Returns list of followers for each user id"""
-    for id, label in zip(ids, labels):
+    for id, label in userData:
         print(f'Retrieving data for {label}.')
-        friends = client.get_friends(user_id=id)  # Returns list of class User
-        for friend in friends:
+        friends = client.get_users_following(id) 
+        print(f'Found {len(friends)} friends for{label}. Collecting data...')
+        for friend in friends.data:
             edges['source'].append(id)
             edges['source_label'].append(label)
             edges['target'].append(friend.id)
-            edges['target_label'].append(friend.screen_name)
+            edges['target_label'].append(friend.username)
 
-        return edges
+    return edges
+
+# Transform to Gephi data
 
 def node_edge_transform(edges: dict, filenameEdges=R'export\edges.csv',
                         filenameNodes=R'export\nodes.csv'):
