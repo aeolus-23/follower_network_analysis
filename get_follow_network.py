@@ -11,46 +11,21 @@ import constants
 #         data = csv.reader(csvfile)
 #         return data
 
-# Testing 
-filename = 'Unite-the-Right_Full-set.csv'
-
-users = {
-    'user_id': [],
-    'user_screen_name': [],
-}
-
-def createUserList(filename, users):
+def createUserList(filename: str, users: dict):
     """Creates list of users of interest from csv file"""
-with open(filename, newline='', encoding='utf-8') as csvfile:
-    data = csv.reader(csvfile)
-    for row in data:
-        users['user_id'].append(row[21])   # user_id column
-        users['user_screen_name'].append(row[30])   # user_screen_name
+    with open(filename, newline='', encoding='utf-8') as csvfile:
+        data = csv.reader(csvfile)
+        for row in data:
+            users['user_id'].append(row[21])   # user_id column
+            users['user_screen_name'].append(row[30])   # user_screen_name
 
+        return users
+    
 # Create new lists for user ids and lables (names) from csv dataset
 
-user_ids = []
-for user in users['user_id']:
-    if user not in user_ids:
-        user_ids.append(user)
-
-user_labels = []
-for user_label in users['user_screen_name']:
-    if user not in user_labels: 
-        user_labels.append(user_label)
-
-print(user_ids[:100])
-print(user_labels[:100])
-print(len(user_ids))
-
-# Get followers of unique users from dataset
-
-edges = {
-    'source': [],
-    'source_label': [],
-    'target': [],       
-    'target_label': []
-}  
+def uniqueUsers(usersData: zip) -> list:
+    """Removes duplicate user ids, returns list of tuples (user_id, label"""
+    return list(set([i for i in usersData]))
 
 def get_friends(client: tweepy.Client, ids: list, labels: list, edges: dict) -> dict:
     """Returns list of followers for each user id"""
