@@ -2,6 +2,7 @@
 
 import csv
 import tweepy
+import constants
 
 # Not used right now, factorize later
 # def load_data(filename: str) -> csv.reader:
@@ -23,6 +24,8 @@ with open(filename, newline='', encoding='utf-8') as csvfile:
     for row in data:
         users['user_id'].append(row[21])   # user_id column
         users['user_screen_name'].append(row[30])   # user_screen_name
+
+# Create new lists for user ids and lables (names) from csv dataset
 
 user_ids = []
 for user in users['user_id']:
@@ -47,15 +50,22 @@ edges = {
     'target_label': []
 }  
 
-def get_followers(ids):
+def get_friends(ids: list, labels: list, edges: dict) -> dict:
     """Returns list of followers for each user id"""
-    for id in user_ids:
-        print(f'Retrieving data for {id}.')
-        followers = tweepy.API.get_friends(user_id=id)  # Returns list of class User
-        for follower in followers:
+    for id, label in zip(ids, labels):
+        print(f'Retrieving data for {label}.')
+        friends = tweepy.API.get_friends(user_id=id)  # Returns list of class User
+        for friend in friends:
             edges['source'].append(id)
-            edges['target'].append(follower.id)
-            edges['target_label'].append(follower.screen_name)
+            edges['target_label'].append(label)
+            edges['target'].append(friend.id)
+            edges['target_label'].append(friend.screen_name)
+
+        return edges
+
+def node_edge_transform():
+    """Transforms dictionary of friend network into Gephi node + edge sheets"""
+    
 
 
 
