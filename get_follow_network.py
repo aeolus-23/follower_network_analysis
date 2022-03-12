@@ -22,7 +22,7 @@ def uniqueUsers(usersData: zip) -> list:
 
 def get_friends(client: tweepy.Client, userData: list, edges: dict) -> dict:
     """Returns list of followers for each user id"""
-    for id, label in userData:
+    for id, label in userData[:15]:     # TODO: Remove slice after testing
         print(f'Retrieving data for {label}.')
         friends = client.get_users_following(id) 
         print(f'Found {len(friends)} friends for{label}. Collecting data...')
@@ -50,6 +50,7 @@ def node_edge_transform(edges: dict, filenameEdges=R'export\edges.csv',
         csvwriter = csv.writer(csvfile)
         csvwriter.writerow(['id', 'label'])
         csvwriter.writerows(zip(edges['source'], edges['source_label']))
+        csvwriter.writerows(zip(edges['target'], edges['target_label']))
 
 
 

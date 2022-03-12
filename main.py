@@ -39,8 +39,8 @@ if __name__ == '__main__':
     }
 
     edges = process.get_friends(client, uniqueData, _edges)
-    print(edges)
-
-    
 
     # TODO: Write information to csv (edges and nodes)
+
+    print('Writing to file...')
+    process.node_edge_transform(edges)
